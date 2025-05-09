@@ -3,9 +3,33 @@ import { AppModule } from './app.module';
 import helmet from 'helmet';
 import rateLimit, { Options } from 'express-rate-limit';
 import { ValidationPipe } from './common/pipes/validation.pipe';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { abortOnError: false });
+
+  // --- Swagger Setup ---
+  const config = new DocumentBuilder()
+    .setTitle('NestJS template API')
+    .setDescription(
+      'Documentation des endpoints de l’API NestJS template avec Auth module gerer par JWT',
+    )
+    .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Entrez votre token JWT ici',
+      },
+      'access-token', // nom de la security dans swagger
+    )
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  // On monte Swagger à l’URL /api/docs
+  SwaggerModule.setup('api/docs', app, document);
+  // --- Fin Swagger Setup ---
+
   // Security Middlewares
   app.use(helmet());
   app.enableCors();
@@ -15,7 +39,6 @@ async function bootstrap() {
     max: 100,
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(rateLimit(rateLimitOptions));
 
   // Global Validation Pipe
