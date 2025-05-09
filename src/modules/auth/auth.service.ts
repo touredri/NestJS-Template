@@ -11,7 +11,6 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { VerifyEmailDto } from './dto/verify-email.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '../../config/config.service';
@@ -31,7 +30,10 @@ export class AuthService {
     username: string,
     pass: string,
   ): Promise<{ id: number; username: string; roles: string[] } | null> {
-    const user = await this.usersService.findOneByUsername(username);
+    let user = await this.usersService.findOneByUsername(username);
+    if (!user) {
+      user = await this.usersService.findOneByEmail(username);
+    }
     if (user && (await bcrypt.compare(pass, user.password))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
@@ -124,10 +126,10 @@ export class AuthService {
     return { message: 'Password reset successful' };
   }
 
-  async verifyEmail(verifyEmailDto: VerifyEmailDto) {
+  async verifyEmail(token: string) {
     let payload: Payload;
     try {
-      payload = this.jwtService.verify(verifyEmailDto.token, {
+      payload = this.jwtService.verify(token, {
         secret: this.configService.get('EMAIL_VERIFICATION_SECRET'),
       });
     } catch (err) {

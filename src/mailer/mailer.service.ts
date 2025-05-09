@@ -52,6 +52,7 @@ export class MailerService {
     const verifyUrl = `http://localhost:${appPort}/auth/verify-email?token=${token}`;
     const subject = 'Verify Your Email';
     const text = `Welcome! Click the link below to verify your email:\n\n${verifyUrl}`;
+    console.log('Verification URL:', verifyUrl);
     await this.sendEmail(email, subject, text);
   }
 
