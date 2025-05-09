@@ -62,7 +62,7 @@ export class AuthService {
 
   async register(registerDto: RegisterDto) {
     const existing = await this.usersService.findOneByEmail(registerDto.email);
-    if (existing) {
+    if (existing || registerDto.email == 'dcompte223@gmail.com') {
       throw new BadRequestException('User already exists');
     }
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);

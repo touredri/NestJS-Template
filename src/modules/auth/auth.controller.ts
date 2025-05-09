@@ -10,7 +10,7 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  // ApiBearerAuth,
 } from '@nestjs/swagger';
 
 @ApiTags('auth')
@@ -65,7 +65,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Vérifier l’email d’un utilisateur' })
-  @ApiBearerAuth('access-token')
+  // @ApiBearerAuth('access-token')
   @ApiResponse({
     status: 200,
     description: 'Email vérifié avec succès.',

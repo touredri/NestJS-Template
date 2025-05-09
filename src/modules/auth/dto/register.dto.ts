@@ -7,6 +7,7 @@ export class RegisterDto {
     example: 'your_email@gmail.com',
   })
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @ApiProperty({
@@ -14,8 +15,14 @@ export class RegisterDto {
     example: 'your_password',
   })
   @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(8)
   password: string;
 
+  @ApiProperty({
+    description: 'your username',
+    example: 'John',
+  })
+  @IsNotEmpty()
+  @MinLength(3)
   username?: string;
 }

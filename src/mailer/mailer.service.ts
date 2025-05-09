@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '../config/config.service';
 import * as nodemailer from 'nodemailer';
@@ -19,7 +22,12 @@ export class MailerService {
     });
   }
 
-  async sendEmail(to: string, subject: string, text: string, html?: string): Promise<any> {
+  async sendEmail(
+    to: string,
+    subject: string,
+    text: string,
+    html?: string,
+  ): Promise<any> {
     const mailOptions = {
       from: this.configService.get('MAIL_FROM'),
       to,
